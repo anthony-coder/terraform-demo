@@ -25,17 +25,17 @@ variable "instance_type" {
 variable "min" {
   description = "Min size of ASG"
   type        = number
-  default     = 1
+  default     = 3
 }
 
 variable "max" {
   description = "Max size of ASG"
   type        = number
-  default     = 1
+  default     = 3
 }
 
 variable "desired_capacity" {
   description = "Desired Capacity of ASG"
   type        = number
-  default     = 1
+  default     = 3
 }
