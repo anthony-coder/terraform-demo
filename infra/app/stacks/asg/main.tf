@@ -1,9 +1,10 @@
 
-#
+# Local Subnet IDs
 locals {
   subnet_ids = ["subnet-7613ce2c", "subnet-fb0b8a9d"]
 }
 
+# Use the Default VPC in our AWS account
 data "aws_vpc" "default" {
   default = true
 }
@@ -27,8 +28,8 @@ resource "aws_security_group" "example_sg" {
   vpc_id = data.aws_vpc.default.id
 
   ingress {
-    from_port   = var.port
-    to_port     = var.port
+    from_port   = var.port  # defaults to 8080
+    to_port     = var.port  # defaults to 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -125,7 +126,7 @@ resource "aws_autoscaling_group" "example_asg" {
 
 }
 
-# Create a target group
+# Create a target group to provide configuration for Load Balancer with ASG
 resource "aws_lb_target_group" "example_tg" {
   name     = "example-tg"
   port     = var.port
@@ -180,6 +181,7 @@ resource "aws_lb" "example_lb" {
   enable_deletion_protection = false
 }
 
+# Create an ALB Listener 
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.example_lb.arn
   port              = 80
