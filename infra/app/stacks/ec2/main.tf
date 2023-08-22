@@ -3,7 +3,7 @@ provider aws {
   region     = "us-west-1" 
 }
 
-# AWS INSTANCE - VM running Ubuntu
+# AWS EC2 INSTANCE - VM running Ubuntu in AWS
 resource aws_instance example {
   ami           = data.aws_ami.example.id
   instance_type = "t2.micro"
@@ -11,7 +11,7 @@ resource aws_instance example {
   # PASS SHELL SCRIPT TO CONFIGURE THE VM
   user_data = <<-EOF
     #!/bin/bash
-    echo "Terraform Demo\n" > index.html
+    echo "Terraform Web Service Demo" > index.html
     echo "This is an HTML file being served on a VM" >> index.html
     nohup busybox httpd -f -p ${var.port} &
     EOF
@@ -26,7 +26,7 @@ resource aws_instance example {
   }
 }
 
-# LOOK UP OS IMAGE FOR OUR INSTANCE
+# LOOK UP OS IMAGE (AMI) FOR OUR INSTANCE TO USE
 data aws_ami example {
   most_recent = true
   owners      = ["099720109477"]
@@ -41,6 +41,7 @@ data aws_ami example {
 resource "aws_security_group" "example" {
   name_prefix = "vm-asg-"
 
+  # DEFINES INGRESS RULE
   ingress {
     from_port   = var.port
     to_port     = var.port
@@ -48,6 +49,7 @@ resource "aws_security_group" "example" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # DEFINES EGRESS RULE
   ingress {
     from_port   = 22
     to_port     = 22
